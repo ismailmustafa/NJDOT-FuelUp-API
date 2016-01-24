@@ -1,12 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
-module CSVtoDB where
+module Database where
 
 import Text.CSV
 import System.FilePath ((</>))
 import Data.Either.Unwrap (fromRight)
 import Data.Maybe (fromJust)
 import Database.SQLite.Simple
-import Database.SQLite.Simple.ToField (toField)
 import Model
 
 type CSVData = [[String]]
@@ -35,14 +34,6 @@ extractStations (x:xs) = case x of
                           Just m -> m : extractStations xs
                           _      -> extractStations xs
 
-instance FromRow Station where
-    fromRow = Station <$> field <*> field <*> field <*> field 
-                      <*> field <*> field <*> field <*> field 
-                      <*> field <*> field <*> field
-
-instance ToRow Station where
-    toRow (Station a b c d e f g h i j k) = [toField a, toField b, toField c, toField d, toField e, toField f,
-                                             toField g, toField h, toField i, toField j, toField k]
 persistStations :: IO ()
 persistStations = do
     stations <- csvToStations parseStations
@@ -73,14 +64,6 @@ extractBridges [] = []
 extractBridges (x:xs) = case x of
                           Just m -> m : extractBridges xs
                           _      -> extractBridges xs
-
-instance FromRow Bridge where
-    fromRow = Bridge <$> field <*> field <*> field <*> field 
-                     <*> field <*> field <*> field <*> field 
-                     <*> field <*> field
-
-instance ToRow Bridge where
-    toRow (Bridge a b c d e f g h i j) = toRow (a,b,c,d,e,f,g,h,i,j)
 
 persistBridges :: IO ()
 persistBridges = do

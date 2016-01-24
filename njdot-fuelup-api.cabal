@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Api, Model, CSVtoDB
+  exposed-modules:     Api, Model, Database
   build-depends:       base >= 4.7 && < 5
                      , aeson
                      , servant-server
@@ -26,6 +26,9 @@ library
                      , csv
                      , either-unwrap
                      , sqlite-simple
+                     , monads-tf
+                     , either
+                     , transformers
   default-language:    Haskell2010
 
 executable njdot-fuelup-api-exe

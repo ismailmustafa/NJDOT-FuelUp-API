@@ -1,17 +1,27 @@
 {-# LANGUAGE DataKinds       #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators   #-}
+{-# LANGUAGE OverloadedStrings #-}
+
 module Api
     ( startApp
     ) where
 
 import Network.Wai
 import Network.Wai.Handler.Warp
+import Control.Monad.Trans.Either (EitherT, runEitherT)
+import Data.Either.Unwrap (fromRight)
+import Database.SQLite.Simple
+import Control.Monad.IO.Class (liftIO)
 import Servant
 import Model
 
-type API = "bridges"  :> Get '[JSON] [Bridge]
-      :<|> "stations" :> Get '[JSON] [Station]
+type API = "bridges"  :> QueryParam "latitude"  Double 
+                      :> QueryParam "longitude" Double 
+                      :> Get '[JSON] [Bridge]
+      :<|> "stations" :> QueryParam "latitude"  Double
+                      :> QueryParam "longitude" Double
+                      :> Get '[JSON] [Station]
 
 startApp :: IO ()
 startApp = run 8080 app
@@ -23,15 +33,22 @@ api :: Proxy API
 api = Proxy
 
 server :: Server API
-server = return bridges :<|> return stations
+server = queryBridges :<|> queryStations
 
-bridges :: [Bridge]
-bridges = [ Bridge 1 "State Routes" "1" "0902153" "SEACAUCUS RD OVER US 1&9 (TONNELLE AVE)" 0.48 "HUDSON" "North Bergen township" 40.7602 74.0511
-          , Bridge 2 "State Routes" "1" "1101150" "ROUTE US 1 OVER ASSUNPINK CREEK" 0.88 "MERCER" "Trenton city" 40.2179 74.7557
-          ]
+bridge :: [Bridge]
+bridge = [Bridge 1 "" "" "" "" 2.0 "" "" 2.0 2.0]
 
-stations :: [Station]
-stations = [ Station 1 "Buena DOT" 39.5155 (-74.9285) "Rt. 40 near Catherine Avenue" "Buena" "NJ" "Atlantic" "time" "num" "gas"
-           , Station 2 "Buena Vista State Police" 39.5779 (-74.8683) "1045 Rt. 54 South of Rt. 322" "Buena Vista Township" "NJ" "Atlantic" "time" "num" "gas"
-           ]
+station :: [Station]
+station = [Station 1 "" 2.0 2.0 "" "" "" "" "" "" ""]
 
+queryBridges :: Maybe Double -> Maybe Double -> EitherT ServantErr IO [Bridge]
+queryBridges lat lng = do
+    liftIO $ print lat
+    liftIO $ print lng
+    conn <- liftIO (open "njdot-fuelup.db")
+    liftIO (query_ conn "SELECT * from bridges" :: IO [Bridge])
+
+queryStations :: Maybe Double -> Maybe Double -> EitherT ServantErr IO [Station]
+queryStations lat lng = do
+    conn <- liftIO (open "njdot-fuelup.db")
+    liftIO (query_ conn "SELECT * from stations" :: IO [Station])
