@@ -29,7 +29,7 @@ type API = "bridges"  :> QueryParam "latitude"  Double
                       :> Get '[JSON] [Station]
 
 startApp :: IO ()
-startApp = run 8080 app
+startApp = run 80 app
 
 app :: Application
 app = serve api server
