@@ -5,7 +5,7 @@ This API was created with [Servant](https://haskell-servant.github.io).
 
 ### How to run: ###
 
-First get [The Haskell Tool Stack](www.haskellstack.org) if you don't already have it.
+First get [The Haskell Tool Stack](http://www.haskellstack.org) if you don't already have it.
 
 ```
 stack setup 
