@@ -33,3 +33,10 @@ rm njdot-fuelup.db
 stack ghci
 Main Api Database Model> initializeDB
 ```
+
+### To run tests: ###
+
+```
+stack test
+```
+
