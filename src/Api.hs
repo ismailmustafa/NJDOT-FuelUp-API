@@ -1,6 +1,6 @@
 module Api (startApp) where
 
-import Api.Internal
+import Internal.Api
 
 import Network.Wai.Handler.Warp
 

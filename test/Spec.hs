@@ -1,6 +1,6 @@
 import Test.Hspec
-import Api.Internal
-import Database.Internal
+import Internal.Api
+import Internal.Database
 import Model
 
 main :: IO ()

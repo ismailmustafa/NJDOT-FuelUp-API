@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeOperators     #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Api.Internal where
+module Internal.Api where
 
 import Network.Wai
 import Control.Monad.Trans.Either (EitherT, runEitherT)

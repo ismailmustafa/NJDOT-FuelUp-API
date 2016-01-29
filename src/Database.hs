@@ -2,7 +2,7 @@
 
 module Database (initializeDB) where
 
-import Database.Internal
+import Internal.Database
 import Database.SQLite.Simple
 
 -- Create tables and insert CSV data into database

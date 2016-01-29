@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Database.Internal where
+module Internal.Database where
 
 import Text.CSV
 import System.FilePath        ((</>))
